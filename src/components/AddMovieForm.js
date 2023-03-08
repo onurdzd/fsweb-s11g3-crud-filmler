@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { nanoid } from "nanoid";
 
-
 const AddMovieForm = (props) => {
 
   const { push } = useHistory();

@@ -11,11 +11,14 @@ import FavoriteMovieList from "./components/FavoriteMovieList";
 import axios from "axios";
 import EditMovieForm from "./components/EditMovieForm";
 import AddMovieForm from "./components/AddMovieForm";
+import { GiNightSleep } from "react-icons/gi";
+import { BsSun } from "react-icons/bs";
 
 const App = (props) => {
   const [movies, setMovies] = useState([]);
   const [favoriteMovies, setFavoriteMovies] = useState([]);
   const history = useHistory();
+  const [toggle, setToggle] = useState(true);
 
   const dataOku = () => {
     axios
@@ -54,10 +57,17 @@ const App = (props) => {
       setFavoriteMovies([...favoriteMovies, movie]);
   };
 
+  const toggleMode = () => {
+    setToggle(!toggle);
+  };
+
   return (
-    <div>
-      <nav className="bg-zinc-800 px-6 py-3">
+    <div className={toggle ? "bg-black" : "bg-white"}>
+      <nav className="bg-zinc-800 px-6 py-3 flex justify-between">
         <h1 className="text-xl text-white">HTTP / CRUD Film Projesi</h1>
+        <button onClick={toggleMode}>
+          {toggle ? <BsSun /> : <GiNightSleep />}
+        </button>
       </nav>
 
       <div className="max-w-4xl mx-auto px-3 pb-4">
@@ -67,7 +77,10 @@ const App = (props) => {
 
           <Switch>
             <Route exact path="/movies/add">
-              <AddMovieForm setMovies={setMovies} dataOku={dataOku}></AddMovieForm>
+              <AddMovieForm
+                setMovies={setMovies}
+                dataOku={dataOku}
+              ></AddMovieForm>
             </Route>
 
             <Route exact path="/movies/edit/:id">
