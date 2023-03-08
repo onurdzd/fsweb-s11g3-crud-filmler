@@ -1,54 +1,58 @@
 import React, { useEffect, useState } from "react";
 
 import { Route, Switch, Redirect, useHistory } from "react-router-dom";
-import MovieList from './components/MovieList';
-import Movie from './components/Movie';
+import MovieList from "./components/MovieList";
+import Movie from "./components/Movie";
 
-import MovieHeader from './components/MovieHeader';
+import MovieHeader from "./components/MovieHeader";
 
-import FavoriteMovieList from './components/FavoriteMovieList';
+import FavoriteMovieList from "./components/FavoriteMovieList";
 
-import axios from 'axios';
+import axios from "axios";
 import EditMovieForm from "./components/EditMovieForm";
+import AddMovieForm from "./components/AddMovieForm";
 
 const App = (props) => {
   const [movies, setMovies] = useState([]);
   const [favoriteMovies, setFavoriteMovies] = useState([]);
-  const history=useHistory()
+  const history = useHistory();
 
-  const dataOku=()=>{
-    axios.get('http://localhost:9000/api/movies')
-    .then(res => {
-      setMovies(res.data);
-    })
-    .catch(err => {
-      console.log(err);
-    });
-  }
+  const dataOku = () => {
+    axios
+      .get("http://localhost:9000/api/movies")
+      .then((res) => {
+        setMovies(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
-    dataOku()
+    dataOku();
   }, []);
 
   const deleteMovie = (id) => {
-    axios.delete(`http://localhost:9000/api/movies/${id}`)
-    .then(res => {
-      if(favoriteMovies.filter(item=> item.id === id).length===1){
-        setFavoriteMovies(favoriteMovies.filter(item=> item.id !== id))
-      }
-      dataOku()
-    })
-    .catch(err => {
-      console.log(err);
-    }).finally(item=>{
-      history.push("/movies")
-    });
-  }
+    axios
+      .delete(`http://localhost:9000/api/movies/${id}`)
+      .then((res) => {
+        if (favoriteMovies.filter((item) => item.id === id).length === 1) {
+          setFavoriteMovies(favoriteMovies.filter((item) => item.id !== id));
+        }
+        dataOku();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally((item) => {
+        history.push("/movies");
+      });
+  };
 
   const addToFavorites = (movie) => {
-    !favoriteMovies.some(item=> item.id === movie.id) &&
-    setFavoriteMovies([...favoriteMovies,movie])
-  }
+    !favoriteMovies.some((item) => item.id === movie.id) &&
+      setFavoriteMovies([...favoriteMovies, movie]);
+  };
 
   return (
     <div>
@@ -62,19 +66,29 @@ const App = (props) => {
           <FavoriteMovieList favoriteMovies={favoriteMovies} />
 
           <Switch>
-            <Route path="/movies/edit/:id">
-              <EditMovieForm setMovies={setMovies} ></EditMovieForm>
+            <Route exact path="/movies/add">
+              <AddMovieForm setMovies={setMovies} dataOku={dataOku}></AddMovieForm>
             </Route>
 
-            <Route path="/movies/:id">
-              <Movie addToFavorites={addToFavorites} deleteMovie={deleteMovie}/>
+            <Route exact path="/movies/edit/:id">
+              <EditMovieForm
+                dataOku={dataOku}
+                setMovies={setMovies}
+              ></EditMovieForm>
             </Route>
 
-            <Route path="/movies">
-              <MovieList movies={movies} favoriteMovies={favoriteMovies}/>
+            <Route exact path="/movies/:id">
+              <Movie
+                addToFavorites={addToFavorites}
+                deleteMovie={deleteMovie}
+              />
             </Route>
 
-            <Route path="/">
+            <Route exact path="/movies">
+              <MovieList movies={movies} favoriteMovies={favoriteMovies} />
+            </Route>
+
+            <Route exact path="/">
               <Redirect to="/movies" />
             </Route>
           </Switch>
@@ -84,6 +98,4 @@ const App = (props) => {
   );
 };
 
-
 export default App;
-

@@ -1,6 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { nanoid } from "nanoid";
 
-const AddMovieForm = () => {
+
+const AddMovieForm = (props) => {
+
+  const { push } = useHistory();
+
+  const { setMovies ,dataOku} = props;
+  const [movie, setMovie] = useState({
+    title: "",
+    director: "",
+    genre: "",
+    metascore: 0,
+    description: "",
+  });
+
+  const handleChange = (e) => {
+    setMovie({
+      ...movie,
+      [e.target.name]: e.target.value,
+      id:nanoid(4)
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post(`http://localhost:9000/api/movies`, movie)
+      .then((res) => {
+        dataOku();
+        push(`/movies/`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const { title, director, genre, metascore, description } = movie;
     return (
         <div className="bg-white rounded-md shadow flex-1">
           <form onSubmit={handleSubmit}>
@@ -70,6 +109,5 @@ const AddMovieForm = () => {
         </div>
       );
     };
-};
 
-export default AddMovieForm;
+    export default AddMovieForm;
