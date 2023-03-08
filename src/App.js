@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import MovieList from './components/MovieList';
 import Movie from './components/Movie';
 
@@ -9,26 +9,44 @@ import MovieHeader from './components/MovieHeader';
 import FavoriteMovieList from './components/FavoriteMovieList';
 
 import axios from 'axios';
+import EditMovieForm from "./components/EditMovieForm";
 
 const App = (props) => {
   const [movies, setMovies] = useState([]);
   const [favoriteMovies, setFavoriteMovies] = useState([]);
+  const history=useHistory()
+
+  const dataOku=()=>{
+    axios.get('http://localhost:9000/api/movies')
+    .then(res => {
+      setMovies(res.data);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
 
   useEffect(() => {
-    axios.get('http://localhost:9000/api/movies')
-      .then(res => {
-        setMovies(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    dataOku()
   }, []);
 
   const deleteMovie = (id) => {
+    axios.delete(`http://localhost:9000/api/movies/${id}`)
+    .then(res => {
+      if(favoriteMovies.filter(item=> item.id === id).length===1){
+        setFavoriteMovies(favoriteMovies.filter(item=> item.id !== id))
+      }
+      dataOku()
+    })
+    .catch(err => {
+      console.log(err);
+    }).finally(item=>{
+      history.push("/movies")
+    });
   }
 
   const addToFavorites = (movie) => {
-    !favoriteMovies.find(item=> item.id === movie.id) &&
+    !favoriteMovies.some(item=> item.id === movie.id) &&
     setFavoriteMovies([...favoriteMovies,movie])
   }
 
@@ -45,14 +63,15 @@ const App = (props) => {
 
           <Switch>
             <Route path="/movies/edit/:id">
+              <EditMovieForm setMovies={setMovies} ></EditMovieForm>
             </Route>
 
             <Route path="/movies/:id">
-              <Movie addToFavorites={addToFavorites}/>
+              <Movie addToFavorites={addToFavorites} deleteMovie={deleteMovie}/>
             </Route>
 
             <Route path="/movies">
-              <MovieList movies={movies} />
+              <MovieList movies={movies} favoriteMovies={favoriteMovies}/>
             </Route>
 
             <Route path="/">
