@@ -63,7 +63,8 @@ const App = (props) => {
   };
 
   return (
-    <div className={toggle ? "bg-black" : "bg-white"}>
+    <div className={toggle && "dark" }>
+      <div className=" dark:bg-slate-800">
       <nav className="bg-zinc-800 px-6 py-3 flex justify-between">
         <h1 className="text-xl text-white">HTTP / CRUD Film Projesi</h1>
         <button onClick={toggleMode}>
@@ -107,6 +108,7 @@ const App = (props) => {
             </Route>
           </Switch>
         </div>
+      </div>
       </div>
     </div>
   );
