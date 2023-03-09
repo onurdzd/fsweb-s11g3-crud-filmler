@@ -38,7 +38,7 @@ const AddMovieForm = (props) => {
 
   const { title, director, genre, metascore, description } = movie;
     return (
-        <div className="bg-white rounded-md shadow flex-1">
+        <div className="bg-white dark:bg-slate-800 rounded-md shadow flex-1">
           <form onSubmit={handleSubmit}>
             <div className="p-5 pb-3 border-b border-zinc-200">
               <h4 className="text-xl font-bold">Düzenleniyor <strong>{movie.title}</strong></h4>
@@ -92,7 +92,7 @@ const AddMovieForm = (props) => {
             </div>
     
             <div className="px-5 py-4 border-t border-zinc-200 flex justify-end gap-2">
-              <Link to={`/movies/1`} className="myButton bg-zinc-500">
+              <Link to={`/movies/`} className="myButton bg-zinc-500">
                 Vazgeç
               </Link>
               <button

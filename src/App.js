@@ -64,8 +64,8 @@ const App = (props) => {
 
   return (
     <div className={toggle && "dark" }>
-      <div className=" dark:bg-slate-800">
-      <nav className="bg-zinc-800 px-6 py-3 flex justify-between">
+      <div className=" dark:bg-slate-800 h-screen ">
+      <nav className="bg-zinc-800 px-6 py-3 flex justify-between dark:border-x-white">
         <h1 className="text-xl text-white">HTTP / CRUD Film Projesi</h1>
         <button onClick={toggleMode}>
           {toggle ? <BsSun /> : <GiNightSleep />}
