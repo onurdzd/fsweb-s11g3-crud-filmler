@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { nanoid } from "nanoid";
 
 const AddMovieForm = (props) => {
 
@@ -21,7 +20,6 @@ const AddMovieForm = (props) => {
     setMovie({
       ...movie,
       [e.target.name]: e.target.value,
-      id:nanoid(4)
     });
   };
 
